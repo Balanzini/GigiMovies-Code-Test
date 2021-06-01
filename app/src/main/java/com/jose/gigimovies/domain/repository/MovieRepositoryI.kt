@@ -1,6 +1,7 @@
 package com.jose.gigimovies.domain.repository
 
 import com.jose.gigimovies.domain.model.Movie
+import kotlinx.coroutines.flow.Flow
 
 interface MovieRepositoryI {
 
@@ -8,7 +9,7 @@ interface MovieRepositoryI {
 
   suspend fun searchMovies(query: String): List<Movie>
 
-  suspend fun getFavourites(): List<Movie>
+  fun getFavourites(): Flow<List<Movie>>
 
   suspend fun setFavourite(movie: Movie)
 

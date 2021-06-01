@@ -6,6 +6,7 @@ import com.jose.gigimovies.domain.model.Movie
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.Flow
 
 class MovieRepository(
   private val movieDataSource: MovieDataSource,
@@ -30,8 +31,8 @@ class MovieRepository(
     }
   }
 
-  override suspend fun getFavourites(): List<Movie> {
-    return favouritesDataSource.getFavourites()
+  override fun getFavourites(): Flow<List<Movie>> {
+    return favouritesDataSource.getFavouritesFlow()
   }
 
   override suspend fun setFavourite(movie: Movie) {

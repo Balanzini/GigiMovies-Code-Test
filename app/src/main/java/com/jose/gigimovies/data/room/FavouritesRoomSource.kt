@@ -3,6 +3,8 @@ package com.jose.gigimovies.data.room
 import com.jose.gigimovies.data.FavouritesDataSource
 import com.jose.gigimovies.data.room.mapper.FavouriteMovieMapper
 import com.jose.gigimovies.domain.model.Movie
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
 class FavouritesRoomSource(
   private val movieDao: FavouriteMovieDao,
@@ -11,6 +13,10 @@ class FavouritesRoomSource(
 
   override suspend fun getFavourites(): List<Movie> {
     return movieMapper.movieEntityToModelMapper(movieDao.getFavourites())
+  }
+
+  override fun getFavouritesFlow(): Flow<List<Movie>> {
+    return movieDao.getFlowFavourites().map { movieMapper.movieEntityToModelMapper(it) }
   }
 
   override suspend fun addFavourite(movie: Movie) {

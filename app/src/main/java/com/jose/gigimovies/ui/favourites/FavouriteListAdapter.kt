@@ -3,6 +3,7 @@ package com.jose.gigimovies.ui.favourites
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.jose.gigimovies.R
 import com.jose.gigimovies.domain.model.Movie
@@ -24,14 +25,15 @@ class FavouriteListAdapter: RecyclerView.Adapter<MovieHolder>() {
   override fun onBindViewHolder(holder: MovieHolder, position: Int) {
     val movie = movieList[position]
     holder.bind(movie){
-      onDelete(position)
+      onDelete(holder.adapterPosition)
     }
   }
 
   fun setMovies(movies: List<Movie>){
+    val diff = DiffUtil.calculateDiff(MovieDiff(movies, movieList))
     this.movieList.clear()
     this.movieList.addAll(movies)
-    notifyDataSetChanged()
+    diff.dispatchUpdatesTo(this)
   }
 }
 

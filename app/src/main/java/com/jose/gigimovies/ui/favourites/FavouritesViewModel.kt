@@ -1,9 +1,6 @@
 package com.jose.gigimovies.ui.favourites
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.jose.gigimovies.domain.model.Movie
 import com.jose.gigimovies.domain.repository.MovieRepositoryI
 import kotlinx.coroutines.Dispatchers
@@ -11,13 +8,13 @@ import kotlinx.coroutines.launch
 
 class FavouritesViewModel(private val movieRepository: MovieRepositoryI) : ViewModel() {
 
-  private val _movieList = MutableLiveData<List<Movie>>()
-  val movieList: LiveData<List<Movie>> = _movieList
+  val movieList: LiveData<List<Movie>> = movieRepository.getFavourites().asLiveData()
 
-  fun getFavourites() {
+  fun deleteFavourite(index: Int) {
     viewModelScope.launch(Dispatchers.IO) {
-      val movies = movieRepository.getFavourites()
-      _movieList.postValue(movies)
+      movieList.value?.get(index)?.let {
+        movieRepository.deleteFavourite(it)
+      }
     }
   }
 }
