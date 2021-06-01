@@ -5,9 +5,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface MovieRepositoryI {
 
-  suspend fun getPopularMovies(): List<Movie>
+  suspend fun getPopularMovies(): Flow<List<Movie>>
 
-  suspend fun searchMovies(query: String): List<Movie>
+  suspend fun searchMovies(query: String): Flow<List<Movie>>
 
   fun getFavourites(): Flow<List<Movie>>
 

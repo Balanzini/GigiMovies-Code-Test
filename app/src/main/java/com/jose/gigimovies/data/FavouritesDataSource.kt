@@ -4,9 +4,8 @@ import com.jose.gigimovies.domain.model.Movie
 import kotlinx.coroutines.flow.Flow
 
 interface FavouritesDataSource {
-    suspend fun getFavourites(): List<Movie>
 
-    fun getFavouritesFlow(): Flow<List<Movie>>
+    fun getFavourites(): Flow<List<Movie>>
 
     suspend fun addFavourite(movie: Movie)
 

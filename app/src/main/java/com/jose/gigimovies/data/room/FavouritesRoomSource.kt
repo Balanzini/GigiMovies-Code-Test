@@ -11,11 +11,7 @@ class FavouritesRoomSource(
   private val movieMapper: FavouriteMovieMapper
 ) : FavouritesDataSource {
 
-  override suspend fun getFavourites(): List<Movie> {
-    return movieMapper.movieEntityToModelMapper(movieDao.getFavourites())
-  }
-
-  override fun getFavouritesFlow(): Flow<List<Movie>> {
+  override fun getFavourites(): Flow<List<Movie>> {
     return movieDao.getFlowFavourites().map { movieMapper.movieEntityToModelMapper(it) }
   }
 

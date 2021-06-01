@@ -1,14 +1,11 @@
 package com.jose.gigimovies.ui.popular
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.jose.gigimovies.domain.model.Movie
 import com.jose.gigimovies.domain.repository.MovieRepositoryI
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class PopularViewModel(private val movieRepository: MovieRepositoryI) : ViewModel() {
 
@@ -18,20 +15,24 @@ class PopularViewModel(private val movieRepository: MovieRepositoryI) : ViewMode
 
   fun getMovies(query: String = prevQuery) {
     viewModelScope.launch(Dispatchers.IO) {
-      val movies = if (query.isEmpty()) {
-        movieRepository.getPopularMovies()
+      if (query.isEmpty()) {
+        movieRepository.getPopularMovies().collect {
+          _movieList.postValue(it)
+        }
       } else {
         prevQuery = query
-        movieRepository.searchMovies(query)
+        movieRepository.searchMovies(query).collect {
+          _movieList.postValue(it)
+        }
       }
-      _movieList.postValue(movies)
+      //_movieList.postValue(movies)
     }
   }
 
-  fun setFavourite(index: Int, selected: Boolean) {
+  fun setFavourite(index: Int) {
     viewModelScope.launch(Dispatchers.IO) {
-      _movieList.value?.get(index)?.let {
-        if (selected) {
+      movieList.value?.get(index)?.let {
+        if (!it.favourite) {
           movieRepository.setFavourite(it)
         }
         else{

@@ -4,6 +4,8 @@ import com.jose.gigimovies.BuildConfig
 import com.jose.gigimovies.data.MovieDataSource
 import com.jose.gigimovies.data.retrofit.mapper.MovieMapper
 import com.jose.gigimovies.domain.model.Movie
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -46,23 +48,43 @@ class MovieRetrofitSource(private val movieMapper: MovieMapper) : MovieDataSourc
     movieService = retrofit.create(MovieService::class.java)
   }
 
-  override suspend fun getPopularMovies(): List<Movie> {
+  override suspend fun getPopularMovies(): Flow<List<Movie>> {
     return try {
       val response = movieService.getPopularMovies()
 
-      movieMapper.movieApiToModelMapper(response.results)
+      if (response.isSuccessful) {
+        flow {
+          emit(movieMapper.movieApiToModelMapper(response.body()?.results ?: emptyList()))
+        }
+      } else {
+        flow {
+          emit(emptyList())
+        }
+      }
     } catch (e: Exception) {
-      emptyList()
+      flow {
+        emit(emptyList())
+      }
     }
   }
 
-  override suspend fun searchMovies(query: String): List<Movie> {
+  override suspend fun searchMovies(query: String): Flow<List<Movie>> {
     return try {
       val response = movieService.getSearchedMovie(query)
 
-      movieMapper.movieApiToModelMapper(response.results)
+      if (response.isSuccessful) {
+        flow {
+          emit(movieMapper.movieApiToModelMapper(response.body()?.results ?: emptyList()))
+        }
+      } else {
+        flow {
+          emit(emptyList())
+        }
+      }
     } catch (e: Exception) {
-      emptyList()
+      flow {
+        emit(emptyList())
+      }
     }
   }
 }

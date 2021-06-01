@@ -1,7 +1,6 @@
 package com.jose.gigimovies.ui.popular
 
 import android.animation.LayoutTransition
-import android.app.SearchManager
 import android.os.Bundle
 import android.view.*
 import android.widget.LinearLayout
@@ -12,7 +11,6 @@ import com.jose.gigimovies.R
 import kotlinx.android.synthetic.main.fragment_movies.*
 import kotlinx.android.synthetic.main.fragment_movies.view.*
 import org.koin.android.viewmodel.ext.android.viewModel
-
 
 class PopularFragment : Fragment() {
 
@@ -26,8 +24,8 @@ class PopularFragment : Fragment() {
       srl_refresh.isRefreshing = false
     })
 
-    adapter.onFavouriteChange = {index, selected ->
-      popularViewModel.setFavourite(index, selected)
+    adapter.onFavouriteChange = {index ->
+      popularViewModel.setFavourite(index)
     }
     setHasOptionsMenu(true)
   }

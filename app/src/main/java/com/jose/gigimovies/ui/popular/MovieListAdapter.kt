@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.movie_item_layout.view.*
 class MovieListAdapter: RecyclerView.Adapter<MovieHolder>() {
 
   private val movieList = ArrayList<Movie>()
-  var onFavouriteChange: (Int, Boolean) -> Unit = {_, _ -> }
+  var onFavouriteChange: (Int) -> Unit = {_ -> }
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieHolder {
     val view = LayoutInflater.from(parent.context).inflate(R.layout.movie_item_layout, parent, false)
@@ -24,7 +24,7 @@ class MovieListAdapter: RecyclerView.Adapter<MovieHolder>() {
   override fun onBindViewHolder(holder: MovieHolder, position: Int) {
     val movie = movieList[position]
     holder.bind(movie){
-      onFavouriteChange(position, it)
+      onFavouriteChange(holder.adapterPosition)
     }
   }
 
@@ -36,17 +36,15 @@ class MovieListAdapter: RecyclerView.Adapter<MovieHolder>() {
 }
 
 class MovieHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-  fun bind(movie: Movie, onFavouriteChangeListener: (Boolean) -> Unit) {
+  fun bind(movie: Movie, onFavouriteChangeListener: () -> Unit) {
     itemView.iv_item_image.loadImage(movie.poster)
     itemView.tv_item_name.text = movie.title
 
     itemView.iv_favourite.setImageResource(getIconResource(movie.favourite))
+    itemView.tv_item_release.text = movie.release
 
     itemView.iv_favourite.setOnClickListener {
-      movie.favourite = !movie.favourite
-      itemView.iv_favourite.setImageResource(getIconResource(movie.favourite))
-      onFavouriteChangeListener(movie.favourite)
+      onFavouriteChangeListener()
     }
   }
 
