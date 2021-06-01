@@ -28,30 +28,40 @@ class MovieRetrofitSource(private val movieMapper: MovieMapper) : MovieDataSourc
 
     val loggingInterceptor = HttpLoggingInterceptor()
     loggingInterceptor.level =
-        if (BuildConfig.DEBUG)
-          HttpLoggingInterceptor.Level.BODY
-        else
-          HttpLoggingInterceptor.Level.NONE
+      if (BuildConfig.DEBUG)
+        HttpLoggingInterceptor.Level.BODY
+      else
+        HttpLoggingInterceptor.Level.NONE
 
     val client =
-        OkHttpClient.Builder().addInterceptor(loggingInterceptor).addInterceptor(authInterceptor)
-            .build()
+      OkHttpClient.Builder().addInterceptor(loggingInterceptor).addInterceptor(authInterceptor)
+        .build()
 
 
     val retrofit = Retrofit.Builder()
-        .baseUrl("https://api.themoviedb.org/3/")
-        .client(client)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
+      .baseUrl("https://api.themoviedb.org/3/")
+      .client(client)
+      .addConverterFactory(GsonConverterFactory.create())
+      .build()
     movieService = retrofit.create(MovieService::class.java)
   }
 
   override suspend fun getPopularMovies(): List<Movie> {
-    return try{
+    return try {
       val response = movieService.getPopularMovies()
 
       movieMapper.movieApiToModelMapper(response.results)
-    } catch (e: Exception){
+    } catch (e: Exception) {
+      emptyList()
+    }
+  }
+
+  override suspend fun searchMovies(query: String): List<Movie> {
+    return try {
+      val response = movieService.getSearchedMovie(query)
+
+      movieMapper.movieApiToModelMapper(response.results)
+    } catch (e: Exception) {
       emptyList()
     }
   }

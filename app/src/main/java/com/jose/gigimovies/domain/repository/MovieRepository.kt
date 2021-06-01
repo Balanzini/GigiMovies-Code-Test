@@ -27,4 +27,8 @@ class MovieRepository(
         val result = movieDataSource.getPopularMovies()
         return result
     }
+
+    override suspend fun searchMovies(query: String): List<Movie> {
+        return movieDataSource.searchMovies(query)
+    }
 }

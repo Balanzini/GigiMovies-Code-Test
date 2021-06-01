@@ -1,16 +1,18 @@
 package com.jose.gigimovies.ui.popular
 
+import android.animation.LayoutTransition
+import android.app.SearchManager
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.TextView
+import android.view.*
+import android.widget.LinearLayout
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.jose.gigimovies.R
 import kotlinx.android.synthetic.main.fragment_movies.*
 import kotlinx.android.synthetic.main.fragment_movies.view.*
 import org.koin.android.viewmodel.ext.android.viewModel
+
 
 class PopularFragment : Fragment() {
 
@@ -23,6 +25,8 @@ class PopularFragment : Fragment() {
       adapter.setMovies(it)
       srl_refresh.isRefreshing = false
     })
+
+    setHasOptionsMenu(true)
   }
   override fun onCreateView(
       inflater: LayoutInflater,
@@ -43,5 +47,27 @@ class PopularFragment : Fragment() {
 
     return root
   }
+
+  override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+    inflater.inflate(R.menu.movie_search_menu, menu)
+    val mSearchView = menu.findItem(R.id.action_search)?.actionView as SearchView
+
+    mSearchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+      override fun onQueryTextSubmit(query: String?): Boolean {
+        popularViewModel.getMovies(query ?: "")
+        return true
+      }
+
+      override fun onQueryTextChange(newText: String?): Boolean {
+        return true
+      }
+
+    })
+
+    val searchBar = mSearchView.findViewById(R.id.search_bar) as LinearLayout
+    searchBar.layoutTransition = LayoutTransition()
+
+  }
+
 
 }

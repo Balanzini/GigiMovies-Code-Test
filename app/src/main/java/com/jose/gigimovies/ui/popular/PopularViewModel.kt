@@ -14,13 +14,20 @@ class PopularViewModel(private val movieRepository: MovieRepositoryI) : ViewMode
 
   private val _movieList = MutableLiveData<List<Movie>>()
   val movieList: LiveData<List<Movie>> = _movieList
+  private var prevQuery = ""
 
-  fun getMovies() {
+  fun getMovies(query: String = prevQuery) {
     viewModelScope.launch {
       withContext(Dispatchers.IO) {
-        val movies = movieRepository.getPopularMovies()
+        val movies = if (query.isEmpty()) {
+          movieRepository.getPopularMovies()
+        } else {
+          prevQuery = query
+          movieRepository.searchMovies(query)
+        }
         _movieList.postValue(movies)
       }
     }
   }
+
 }

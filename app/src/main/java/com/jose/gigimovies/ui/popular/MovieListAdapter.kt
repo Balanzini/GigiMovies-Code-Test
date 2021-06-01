@@ -37,5 +37,12 @@ class MovieHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
   fun bind(movie: Movie) {
     itemView.iv_item_image.loadImage(movie.poster)
     itemView.tv_item_name.text = movie.title
+
+    itemView.iv_favourite.setImageResource(if(movie.favourite) R.drawable.ic_favorite_24 else R.drawable.ic_favorite_border_24)
+
+    itemView.iv_favourite.setOnClickListener {
+      movie.favourite = !movie.favourite
+      itemView.iv_favourite.setImageResource(if(movie.favourite) R.drawable.ic_favorite_24 else R.drawable.ic_favorite_border_24)
+    }
   }
 }

@@ -6,4 +6,6 @@ interface MovieRepositoryI {
 
     suspend fun getPopularMovies(): List<Movie>
 
+    suspend fun searchMovies(query: String): List<Movie>
+
 }
