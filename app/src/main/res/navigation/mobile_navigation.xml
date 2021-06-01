@@ -13,7 +13,7 @@
 
   <fragment
       android:id="@+id/navigation_notifications"
-      android:name="com.jose.gigimovies.ui.notifications.NotificationsFragment"
-      android:label="@string/title_notifications"
+      android:name="com.jose.gigimovies.ui.favourites.FavouritesFragment"
+      android:label="@string/title_favourites"
       tools:layout="@layout/fragment_notifications" />
 </navigation>

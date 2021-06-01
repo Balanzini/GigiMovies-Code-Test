@@ -17,15 +17,26 @@ class PopularViewModel(private val movieRepository: MovieRepositoryI) : ViewMode
   private var prevQuery = ""
 
   fun getMovies(query: String = prevQuery) {
-    viewModelScope.launch {
-      withContext(Dispatchers.IO) {
-        val movies = if (query.isEmpty()) {
-          movieRepository.getPopularMovies()
-        } else {
-          prevQuery = query
-          movieRepository.searchMovies(query)
+    viewModelScope.launch(Dispatchers.IO) {
+      val movies = if (query.isEmpty()) {
+        movieRepository.getPopularMovies()
+      } else {
+        prevQuery = query
+        movieRepository.searchMovies(query)
+      }
+      _movieList.postValue(movies)
+    }
+  }
+
+  fun setFavourite(index: Int, selected: Boolean) {
+    viewModelScope.launch(Dispatchers.IO) {
+      _movieList.value?.get(index)?.let {
+        if (selected) {
+          movieRepository.setFavourite(it)
         }
-        _movieList.postValue(movies)
+        else{
+          movieRepository.deleteFavourite(it)
+        }
       }
     }
   }

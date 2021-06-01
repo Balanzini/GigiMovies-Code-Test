@@ -3,32 +3,64 @@ package com.jose.gigimovies.domain.repository
 import com.jose.gigimovies.data.FavouritesDataSource
 import com.jose.gigimovies.data.MovieDataSource
 import com.jose.gigimovies.domain.model.Movie
+import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 
 class MovieRepository(
-    private val movieDataSource: MovieDataSource,
-    private val favouritesDataSource: FavouritesDataSource
+  private val movieDataSource: MovieDataSource,
+  private val favouritesDataSource: FavouritesDataSource
 ) : MovieRepositoryI {
 
-    override suspend fun getPopularMovies(): List<Movie> {
-        coroutineScope {
-            val result1 = async {
-                movieDataSource.getPopularMovies()
-            }
-            val result2 = async {
-                favouritesDataSource.getFavourites()
+  override suspend fun getPopularMovies(): List<Movie> {
+    return coroutineScope {
+      val resultSearch = async {
+        movieDataSource.getPopularMovies()
+      }
+      checkFavourites(resultSearch)
+    }
+  }
 
-            }
-            val r1 = result1.await()
-            val r2 = result2.await()
-            (r1 + r2).groupBy { it.id }
-        }
-        val result = movieDataSource.getPopularMovies()
-        return result
+  override suspend fun searchMovies(query: String): List<Movie> {
+    return coroutineScope {
+      val resultSearch = async {
+        movieDataSource.searchMovies(query)
+      }
+      checkFavourites(resultSearch)
+    }
+  }
+
+  override suspend fun getFavourites(): List<Movie> {
+    return favouritesDataSource.getFavourites()
+  }
+
+  override suspend fun setFavourite(movie: Movie) {
+    favouritesDataSource.addFavourite(movie)
+  }
+
+  override suspend fun deleteFavourite(movie: Movie) {
+    favouritesDataSource.deleteFavourite(movie)
+  }
+
+  private suspend fun checkFavourites(originList: Deferred<List<Movie>>): List<Movie> {
+    var resultList = emptyList<Movie>()
+    coroutineScope {
+      val resultFavourites = async {
+        favouritesDataSource.getFavourites()
+      }
+
+      val searchMovies = originList.await()
+      val favouriteMovies = resultFavourites.await()
+
+      val idFavouriteList = favouriteMovies.map { it.id }
+
+      resultList = searchMovies.map {
+        it.favourite = idFavouriteList.contains(it.id)
+        it
+      }
+
     }
 
-    override suspend fun searchMovies(query: String): List<Movie> {
-        return movieDataSource.searchMovies(query)
-    }
+    return resultList
+  }
 }

@@ -26,8 +26,12 @@ class PopularFragment : Fragment() {
       srl_refresh.isRefreshing = false
     })
 
+    adapter.onFavouriteChange = {index, selected ->
+      popularViewModel.setFavourite(index, selected)
+    }
     setHasOptionsMenu(true)
   }
+
   override fun onCreateView(
       inflater: LayoutInflater,
       container: ViewGroup?,

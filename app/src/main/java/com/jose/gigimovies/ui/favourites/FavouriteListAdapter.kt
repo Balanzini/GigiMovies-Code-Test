@@ -1,4 +1,4 @@
-package com.jose.gigimovies.ui.popular
+package com.jose.gigimovies.ui.favourites
 
 import android.view.LayoutInflater
 import android.view.View
@@ -9,10 +9,10 @@ import com.jose.gigimovies.domain.model.Movie
 import com.jose.gigimovies.ui.loadImage
 import kotlinx.android.synthetic.main.movie_item_layout.view.*
 
-class MovieListAdapter: RecyclerView.Adapter<MovieHolder>() {
+class FavouriteListAdapter: RecyclerView.Adapter<MovieHolder>() {
 
   private val movieList = ArrayList<Movie>()
-  var onFavouriteChange: (Int, Boolean) -> Unit = {_, _ -> }
+  var onDelete: (Int) -> Unit = { }
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieHolder {
     val view = LayoutInflater.from(parent.context).inflate(R.layout.movie_item_layout, parent, false)
@@ -24,7 +24,7 @@ class MovieListAdapter: RecyclerView.Adapter<MovieHolder>() {
   override fun onBindViewHolder(holder: MovieHolder, position: Int) {
     val movie = movieList[position]
     holder.bind(movie){
-      onFavouriteChange(position, it)
+      onDelete(position)
     }
   }
 
@@ -37,20 +37,15 @@ class MovieListAdapter: RecyclerView.Adapter<MovieHolder>() {
 
 class MovieHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-  fun bind(movie: Movie, onFavouriteChangeListener: (Boolean) -> Unit) {
+  fun bind(movie: Movie, onDeleteListener: () -> Unit) {
     itemView.iv_item_image.loadImage(movie.poster)
     itemView.tv_item_name.text = movie.title
 
-    itemView.iv_favourite.setImageResource(getIconResource(movie.favourite))
+    itemView.iv_favourite.setImageResource(R.drawable.ic_delete)
 
     itemView.iv_favourite.setOnClickListener {
-      movie.favourite = !movie.favourite
-      itemView.iv_favourite.setImageResource(getIconResource(movie.favourite))
-      onFavouriteChangeListener(movie.favourite)
+      onDeleteListener()
     }
   }
 
-  private fun getIconResource(isFavourite: Boolean): Int{
-    return if(isFavourite) R.drawable.ic_favorite_24 else R.drawable.ic_favorite_border_24
-  }
 }
