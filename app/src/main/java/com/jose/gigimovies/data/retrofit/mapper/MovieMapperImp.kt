@@ -22,7 +22,7 @@ class MovieMapperImp : MovieMapper {
     } catch (e: Exception) {
       ""
     }
-    return with(movieApi) { Movie(id, title, poster_path, time, false) }
+    return with(movieApi) { Movie(id, title ?: "", poster_path ?: "", time, false) }
   }
 
 }

@@ -25,7 +25,6 @@ class PopularViewModel(private val movieRepository: MovieRepositoryI) : ViewMode
           _movieList.postValue(it)
         }
       }
-      //_movieList.postValue(movies)
     }
   }
 
