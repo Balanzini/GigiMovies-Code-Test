@@ -12,8 +12,8 @@
       tools:layout="@layout/fragment_movies" />
 
   <fragment
-      android:id="@+id/navigation_notifications"
+      android:id="@+id/navigation_favourites"
       android:name="com.jose.gigimovies.ui.favourites.FavouritesFragment"
       android:label="@string/title_favourites"
-      tools:layout="@layout/fragment_notifications" />
+      tools:layout="@layout/fragment_favourites" />
 </navigation>

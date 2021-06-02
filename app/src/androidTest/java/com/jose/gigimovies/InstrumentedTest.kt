@@ -31,7 +31,7 @@ class InstrumentedTest {
   fun simpleInstrumentedTest() {
     wait(3)
     onView(withId(R.id.rv_movies)).check(matches(isDisplayed()))
-    onView(withId(R.id.navigation_notifications)).perform(click())
+    onView(withId(R.id.navigation_favourites)).perform(click())
     wait(1)
     onView(withId(R.id.rv_movies)).check(matches(isDisplayed()))
   }
