@@ -1,0 +1,10 @@
+<resources>
+  <string name="app_name">GigiMovies</string>
+
+  <!-- Navigation bar -->
+  <string name="title_popular">Popular</string>
+  <string name="title_favourites">Favoritas</string>
+
+  <!-- TOOLBAR -->
+  <string name="toolbar_menu_search">Buscar</string>
+</resources>
