@@ -31,7 +31,7 @@ class FavouritesFragment : Fragment() {
       container: ViewGroup?,
       savedInstanceState: Bundle?
   ): View? {
-    val root = inflater.inflate(R.layout.fragment_notifications, container, false)
+    val root = inflater.inflate(R.layout.fragment_favourites, container, false)
     root.rv_movies.adapter = adapter
 
     return root
