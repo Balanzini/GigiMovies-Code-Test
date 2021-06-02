@@ -5,10 +5,8 @@ import com.jose.gigimovies.data.MovieDataSource
 import com.jose.gigimovies.domain.model.Movie
 import io.mockk.coEvery
 import io.mockk.mockk
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Before

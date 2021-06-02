@@ -35,7 +35,7 @@ class PopularViewModelTest {
   }
 
   @Test
-  fun useAppContext() {
+  fun getPopularMoviesTest() {
     // Given
     val mockObserver = createPopularObserver()
     popularViewModel.movieList.observeForever(mockObserver)
