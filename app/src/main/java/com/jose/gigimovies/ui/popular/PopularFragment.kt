@@ -19,15 +19,20 @@ class PopularFragment : Fragment() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    popularViewModel.movieList.observe(this, Observer {
-      adapter.setMovies(it)
-      srl_refresh.isRefreshing = false
-    })
 
     adapter.onFavouriteChange = {index ->
       popularViewModel.setFavourite(index)
     }
     setHasOptionsMenu(true)
+  }
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+
+    popularViewModel.movieList.observe(viewLifecycleOwner, Observer {
+      adapter.setMovies(it)
+      srl_refresh.isRefreshing = false
+    })
   }
 
   override fun onCreateView(

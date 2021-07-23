@@ -3,12 +3,14 @@ package com.jose.gigimovies.data.retrofit
 import com.jose.gigimovies.BuildConfig
 import com.jose.gigimovies.data.MovieDataSource
 import com.jose.gigimovies.data.retrofit.mapper.MovieMapper
+import com.jose.gigimovies.data.retrofit.model.MovieResponse
 import com.jose.gigimovies.domain.model.Movie
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
@@ -52,15 +54,21 @@ class MovieRetrofitSource(private val movieMapper: MovieMapper) : MovieDataSourc
     return try {
       val response = movieService.getPopularMovies()
 
-      if (response.isSuccessful) {
-        flow {
-          emit(movieMapper.movieApiToModelMapper(response.body()?.results ?: emptyList()))
-        }
-      } else {
-        flow {
-          emit(emptyList())
-        }
+      val mapper : (MovieResponse?) -> List<Movie> = { resp ->
+        movieMapper.movieApiToModelMapper(resp?.results ?: emptyList())
       }
+
+      callAdapter(response, mapper, emptyList())
+
+//      if (response.isSuccessful) {
+//        flow {
+//          emit(movieMapper.movieApiToModelMapper(response.body()?.results ?: emptyList()))
+//        }
+//      } else {
+//        flow {
+//          emit(emptyList())
+//        }
+//      }
     } catch (e: Exception) {
       flow {
         emit(emptyList())
@@ -69,21 +77,43 @@ class MovieRetrofitSource(private val movieMapper: MovieMapper) : MovieDataSourc
   }
 
   override suspend fun searchMovies(query: String): Flow<List<Movie>> {
+
     return try {
       val response = movieService.getSearchedMovie(query)
 
-      if (response.isSuccessful) {
-        flow {
-          emit(movieMapper.movieApiToModelMapper(response.body()?.results ?: emptyList()))
-        }
-      } else {
-        flow {
-          emit(emptyList())
-        }
+      val mapper : (MovieResponse?) -> List<Movie> = { resp ->
+        movieMapper.movieApiToModelMapper(resp?.results ?: emptyList())
       }
+
+      callAdapter(response, mapper, emptyList())
+
+//      if (response.isSuccessful) {
+//        flow {
+//          emit(movieMapper.movieApiToModelMapper(response.body()?.results ?: emptyList()))
+//        }
+//      } else {
+//        flow {
+//          emit(emptyList())
+//        }
+//      }
     } catch (e: Exception) {
       flow {
         emit(emptyList())
+      }
+    }
+  }
+
+  // m = movieresponse
+  //n List<Movie>
+  private fun <M, N> callAdapter(response: Response<M>, mapper: (M?) -> N, default: N): Flow<N> {
+
+    return if (response.isSuccessful) {
+      flow {
+        emit(mapper(response.body()))
+      }
+    } else {
+      flow {
+        emit(default)
       }
     }
   }

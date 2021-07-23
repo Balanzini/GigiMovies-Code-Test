@@ -17,19 +17,25 @@ class FavouritesFragment : Fragment() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    favouritesViewModel.movieList.observe(this, Observer {
-      adapter.setMovies(it)
-    })
 
-    adapter.onDelete = {index ->
+    adapter.onDelete = { index ->
       favouritesViewModel.deleteFavourite(index)
     }
 
   }
+
+  override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+
+    favouritesViewModel.movieList.observe(viewLifecycleOwner, Observer {
+      adapter.setMovies(it)
+    })
+  }
+
   override fun onCreateView(
-      inflater: LayoutInflater,
-      container: ViewGroup?,
-      savedInstanceState: Bundle?
+    inflater: LayoutInflater,
+    container: ViewGroup?,
+    savedInstanceState: Bundle?
   ): View? {
     val root = inflater.inflate(R.layout.fragment_favourites, container, false)
     root.rv_movies.adapter = adapter

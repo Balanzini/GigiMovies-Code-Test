@@ -1,5 +1,6 @@
 package com.jose.gigimovies.ui.popular
 
+import android.util.Log
 import androidx.lifecycle.*
 import com.jose.gigimovies.domain.model.Movie
 import com.jose.gigimovies.domain.repository.MovieRepositoryI
