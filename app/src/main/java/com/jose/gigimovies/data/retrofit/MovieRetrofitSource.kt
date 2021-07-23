@@ -60,15 +60,6 @@ class MovieRetrofitSource(private val movieMapper: MovieMapper) : MovieDataSourc
 
       callAdapter(response, mapper, emptyList())
 
-//      if (response.isSuccessful) {
-//        flow {
-//          emit(movieMapper.movieApiToModelMapper(response.body()?.results ?: emptyList()))
-//        }
-//      } else {
-//        flow {
-//          emit(emptyList())
-//        }
-//      }
     } catch (e: Exception) {
       flow {
         emit(emptyList())
@@ -87,15 +78,6 @@ class MovieRetrofitSource(private val movieMapper: MovieMapper) : MovieDataSourc
 
       callAdapter(response, mapper, emptyList())
 
-//      if (response.isSuccessful) {
-//        flow {
-//          emit(movieMapper.movieApiToModelMapper(response.body()?.results ?: emptyList()))
-//        }
-//      } else {
-//        flow {
-//          emit(emptyList())
-//        }
-//      }
     } catch (e: Exception) {
       flow {
         emit(emptyList())
@@ -103,8 +85,6 @@ class MovieRetrofitSource(private val movieMapper: MovieMapper) : MovieDataSourc
     }
   }
 
-  // m = movieresponse
-  //n List<Movie>
   private fun <M, N> callAdapter(response: Response<M>, mapper: (M?) -> N, default: N): Flow<N> {
 
     return if (response.isSuccessful) {
