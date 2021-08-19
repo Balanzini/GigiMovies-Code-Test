@@ -61,8 +61,9 @@ class MovieRetrofitSource(private val movieMapper: MovieMapper) : MovieDataSourc
       callAdapter(response, mapper, emptyList())
 
     } catch (e: Exception) {
+      // TODO error handling
       flow {
-        emit(emptyList())
+        emit(emptyList<Movie>())
       }
     }
   }
@@ -79,8 +80,9 @@ class MovieRetrofitSource(private val movieMapper: MovieMapper) : MovieDataSourc
       callAdapter(response, mapper, emptyList())
 
     } catch (e: Exception) {
+      // TODO error handling
       flow {
-        emit(emptyList())
+        emit(emptyList<Movie>())
       }
     }
   }

@@ -38,7 +38,7 @@ class MovieRepositoryTest {
 
     @Test
     fun getPopularMoviesTest() {
-        coEvery { favouritesDataSource.getFavourites() } returns flow{ emit(emptyList())}
+        coEvery { favouritesDataSource.getFavourites() } returns flow{ emit(emptyList<Movie>())}
         val result = runBlocking {
             movieRepository.getPopularMovies().first()
         }
@@ -48,7 +48,7 @@ class MovieRepositoryTest {
     @Test
     fun searchMovie(){
         coEvery { movieDataSource.searchMovies(any())} returns flow{emit(listOf(movie1, movie2, movie3))}
-        coEvery { favouritesDataSource.getFavourites() } returns flow{ emit(emptyList())}
+        coEvery { favouritesDataSource.getFavourites() } returns flow{ emit(emptyList<Movie>())}
         val result = runBlocking {
             movieRepository.searchMovies("hello").first()
         }
