@@ -1,16 +1,14 @@
 package com.jose.gigimovies.ui.popular
 
-import android.util.Log
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -28,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.jose.gigimovies.R
+import com.jose.gigimovies.ui.main.Screen
 import com.jose.gigimovies.ui.moviedetail.MovieItem
 import org.koin.androidx.compose.getViewModel
 
@@ -40,20 +39,17 @@ fun MovieList() {
   // We save the scrolling position with this state
   val scrollState = rememberLazyListState()
 
-  Scaffold(
-    topBar = {
-      SearchToolbar {
-        viewModel.getMovies(query = it)
-      }
-    },
-  ) {
+  Column {
+    SearchToolbar {
+      viewModel.getMovies(query = it)
+    }
     movies?.let {
       SwipeRefresh(
         state = rememberSwipeRefreshState(isRefreshing = isRefreshing == true),
         onRefresh = {
           viewModel.getMovies()
         }) {
-        LazyColumn(state = scrollState) {
+        LazyColumn(state = scrollState, modifier = Modifier.fillMaxHeight()) {
 
           itemsIndexed(it) { index, movie ->
             MovieItem(movie.title, movie.release, movie.poster) {
@@ -74,17 +70,16 @@ private fun SearchToolbar(onSearchWorld: (String) -> Unit) {
 
   TopAppBar(
 
-    title = { /*Text(text = "Popular", color = Color.White, fontWeight = FontWeight.Bold)*/
+    title = {
       if (search) {
         Search {
           onSearchWorld(it)
         }
       } else {
-        Text(text = "Popular", color = Color.White, fontWeight = FontWeight.Bold)
+        Text(text = Screen.Popular.title, color = Color.White, fontWeight = FontWeight.Bold)
       }
 
     },
-    modifier = Modifier.padding(2.dp),
     backgroundColor = colorResource(id = R.color.colorPrimary),
     elevation = 12.dp,
     navigationIcon = if (search) {

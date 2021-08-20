@@ -2,6 +2,8 @@ package com.jose.gigimovies.ui.favourites
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -22,6 +24,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.jose.gigimovies.R
+import com.jose.gigimovies.ui.main.Screen
 import com.jose.gigimovies.ui.moviedetail.MovieItem
 import org.koin.androidx.compose.getViewModel
 
@@ -33,17 +36,10 @@ fun FavouriteList() {
   // We save the scrolling position with this state
   val scrollState = rememberLazyListState()
 
-  Scaffold(
-    topBar = {
-      TopAppBar(
-        title = { Text(text = "Favourites", color = Color.White, fontWeight = FontWeight.Bold) },
-        backgroundColor = colorResource(id = R.color.colorPrimary),
-        elevation = 12.dp
-      )
-    },
-  ) {
+  Column {
+    FavouriteTopAppBar()
     movies?.let {
-      LazyColumn(state = scrollState) {
+      LazyColumn(state = scrollState, modifier = Modifier.fillMaxHeight()) {
         itemsIndexed(it) { index, movie ->
           MovieItem(movie.title, movie.release, movie.poster) {
             DeleteMovie {
@@ -54,6 +50,21 @@ fun FavouriteList() {
       }
     }
   }
+}
+
+@Composable
+fun FavouriteTopAppBar() {
+  TopAppBar(
+    title = {
+      Text(
+        text = Screen.Favourite.title,
+        color = Color.White,
+        fontWeight = FontWeight.Bold
+      )
+    },
+    backgroundColor = colorResource(id = R.color.colorPrimary),
+    elevation = 12.dp
+  )
 }
 
 @Composable
